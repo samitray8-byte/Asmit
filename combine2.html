@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PY // LABS — Python Strings, Lists, Tuples &amp; Libraries</title>
+  <!-- Bootstrap 5.3 CSS Only (Zero JavaScript) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. DESIGN TOKENS & PURE-CSS THEME ENGINE (:has() + Bootstrap --bs-* Vars)
+       ========================================================================== */
+    :root {
+      --py-bg: #f8fafc;
+      --py-surface: #ffffff;
+      --py-surface-alt: #f1f5f9;
+      --py-code-bg: #0f172a;
+      --py-code-text: #e2e8f0;
+      --py-text: #0f172a;
+      --py-text-muted: #475569;
+      --py-border: #e2e8f0;
+      --py-accent: #2563eb;
+      --py-accent-2: #0284c7;
+      --py-accent-rgb: 37, 99, 235;
+      --py-glass: rgba(255, 255, 255, 0.82);
+      --py-grid-line: rgba(15, 23, 42, 0.05);
+      --py-shadow: 0 10px 28px -10px rgba(15, 23, 42, 0.08);
+    }
+
+    /* Midnight Python Theme */
+    .py-shell:has(#theme-midnight:checked) {
+      --py-bg: #070d19;
+      --py-surface: #0f172a;
+      --py-surface-alt: #1e293b;
+      --py-code-bg: #050811;
+      --py-code-text: #f1f5f9;
+      --py-text: #f8fafc;
+      --py-text-muted: #94a3b8;
+      --py-border: #1e293b;
+      --py-accent: #38bdf8;
+      --py-accent-2: #818cf8;
+      --py-accent-rgb: 56, 189, 248;
+      --py-glass: rgba(15, 23, 42, 0.85);
+      --py-grid-line: rgba(56, 189, 248, 0.06);
+      --py-shadow: 0 14px 34px -10px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Emerald Lab Theme */
+    .py-shell:has(#theme-emerald:checked) {
+      --py-bg: #04130f;
+      --py-surface: #08211a;
+      --py-surface-alt: #0d3228;
+      --py-code-bg: #030d0a;
+      --py-code-text: #ecfdf5;
+      --py-text: #ecfdf5;
+      --py-text-muted: #6ee7b7;
+      --py-border: #134e3a;
+      --py-accent: #10b981;
+      --py-accent-2: #eab308;
+      --py-accent-rgb: 16, 185, 129;
+      --py-glass: rgba(8, 33, 26, 0.86);
+      --py-grid-line: rgba(16, 185, 129, 0.07);
+      --py-shadow: 0 14px 34px -10px rgba(0, 0, 0, 0.65);
+    }
+
+    /* Map Custom Tokens to Bootstrap 5.3 Variables */
+    .py-shell {
+      --bs-body-bg: var(--py-bg);
+      --bs-body-color: var(--py-text);
+      --bs-card-bg: var(--py-surface);
+      --bs-border-color: var(--py-border);
+      --bs-primary: var(--py-accent);
+      --bs-primary-rgb: var(--py-accent-rgb);
+
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--py-bg);
+      color: var(--py-text);
+      min-height: 100vh;
+      transition: background-color 0.35s ease, color 0.35s ease;
+      overflow-x: clip;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .text-py-muted {
+      color: var(--py-text-muted) !important;
+    }
+
+    .py-card {
+      background-color: var(--py-surface);
+      border: 1px solid var(--py-border);
+      border-radius: 1rem;
+      box-shadow: var(--py-shadow);
+      transition: background-color 0.35s ease, border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .py-code {
+      background-color: var(--py-code-bg);
+      color: var(--py-code-text);
+      border: 1px solid var(--py-border);
+      border-radius: 0.75rem;
+      padding: 0.95rem 1.1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      overflow-x: auto;
+      margin-bottom: 0;
+      white-space: pre;
+    }
+
+    .py-output {
+      background-color: var(--py-surface-alt);
+      border-left: 4px solid var(--py-accent);
+      border-radius: 0.5rem;
+      padding: 0.7rem 0.95rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--py-text);
+      white-space: pre-wrap;
+    }
+
+    .btn-py-primary {
+      background: linear-gradient(135deg, var(--py-accent), var(--py-accent-2));
+      border: none;
+      color: #ffffff;
+      font-weight: 600;
+      border-radius: 0.65rem;
+      padding: 0.6rem 1.25rem;
+      transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-py-primary:hover {
+      color: #ffffff;
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px -6px rgba(var(--py-accent-rgb), 0.55);
+    }
+
+    /* ==========================================================================
+       2. SCROLL-DRIVEN PROGRESS BAR & VIEW TIMELINE REVEALS
+       ========================================================================== */
+    .scroll-progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--py-accent), var(--py-accent-2), #ec4899);
+      transform-origin: 0 50%;
+      z-index: 1060;
+      animation: growScroll linear both;
+      animation-timeline: scroll(root);
+    }
+
+    @keyframes growScroll {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    @supports (animation-timeline: view()) {
+      .scroll-reveal {
+        animation: revealCard linear both;
+        animation-timeline: view();
+        animation-range: entry 6% cover 25%;
+      }
+
+      @keyframes revealCard {
+        from {
+          opacity: 0;
+          transform: translateY(28px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+    }
+
+    /* ==========================================================================
+       3. STICKY NAVBAR, THEME SWITCHER & HERO GRID
+       ========================================================================== */
+    .py-navbar {
+      background-color: var(--py-glass);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--py-border);
+      z-index: 1040;
+    }
+
+    .theme-switcher .btn-check + .btn {
+      border-color: var(--py-border);
+      color: var(--py-text-muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.32rem 0.7rem;
+    }
+
+    .theme-switcher .btn-check:checked + .btn {
+      background-color: var(--py-accent);
+      border-color: var(--py-accent);
+      color: #ffffff;
+    }
+
+    .hero-banner {
+      position: relative;
+      background-image:
+        linear-gradient(to right, var(--py-grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--py-grid-line) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: -12%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(780px, 92vw);
+      height: 340px;
+      background: radial-gradient(circle, rgba(var(--py-accent-rgb), 0.2) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ==========================================================================
+       4. BENTO GRID & CONTAINER QUERIES (@container)
+       ========================================================================== */
+    .bento-grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 992px) {
+      .bento-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .bento-span-2 {
+        grid-column: span 2;
+      }
+    }
+
+    .cq-slot {
+      container-type: inline-size;
+      container-name: study-slot;
+    }
+
+    .bento-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      height: 100%;
+    }
+
+    .bento-code-pane {
+      flex: 1;
+      min-width: 0;
+    }
+
+    @container study-slot (min-width: 480px) {
+      .bento-inner {
+        flex-direction: row;
+        align-items: stretch;
+      }
+      .bento-meta {
+        width: 42%;
+        flex-shrink: 0;
+      }
+      .bento-code-pane {
+        width: 58%;
+      }
+    }
+
+    /* ==========================================================================
+       5. 3D PERSPECTIVE FLIP CARDS (CONCEPTS, COMPARISONS & LIBRARIES)
+       ========================================================================== */
+    .flip-stage {
+      perspective: 1200px;
+      min-height: 310px;
+    }
+
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 310px;
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(0.34, 1.3, 0.64, 1);
+    }
+
+    .flip-stage:hover .flip-inner,
+    .flip-stage:focus-within .flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .flip-front {
+      background-color: var(--py-surface);
+      border: 1px solid var(--py-border);
+      box-shadow: var(--py-shadow);
+    }
+
+    .flip-back {
+      transform: rotateY(180deg);
+      background-color: var(--py-surface-alt);
+      border: 1px solid var(--py-accent);
+      box-shadow: 0 14px 32px -10px rgba(var(--py-accent-rgb), 0.3);
+    }
+
+    /* ==========================================================================
+       6. PURE-CSS MULTI-STEP STUDY WIZARD (:checked ~ & :has(:invalid))
+       ========================================================================== */
+    .lab-radio,
+    .lab-pane {
+      display: none;
+    }
+
+    #lab-step-1:checked ~ .lab-shell .pane-ch4,
+    #lab-step-2:checked ~ .lab-shell .pane-ch5,
+    #lab-step-3:checked ~ .lab-shell .pane-practice {
+      display: block;
+      animation: fadeSlide 0.3s ease;
+    }
+
+    #lab-step-1:checked ~ .lab-shell .lab-progress { width: 33.33%; }
+    #lab-step-2:checked ~ .lab-shell .lab-progress { width: 66.66%; }
+    #lab-step-3:checked ~ .lab-shell .lab-progress { width: 100%; }
+
+    #lab-step-1:checked ~ .lab-shell .pill-1,
+    #lab-step-2:checked ~ .lab-shell .pill-2,
+    #lab-step-3:checked ~ .lab-shell .pill-3 {
+      background-color: var(--py-accent);
+      color: #ffffff;
+      border-color: var(--py-accent);
+    }
+
+    /* Gate progression button until required inputs inside the active step are valid */
+    .lab-pane:has(:invalid) .btn-lab-next {
+      pointer-events: none;
+      opacity: 0.45;
+      filter: grayscale(0.5);
+    }
+
+    /* Parent-aware form card styling via :has() */
+    .lab-shell {
+      border: 1px solid var(--py-border);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .lab-shell:has(input:focus, select:focus) {
+      border-color: var(--py-accent);
+      box-shadow: 0 0 0 4px rgba(var(--py-accent-rgb), 0.16);
+    }
+
+    .lab-shell:has(input:user-invalid) {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.16);
+    }
+
+    .py-input {
+      background-color: var(--py-surface-alt);
+      border: 1px solid var(--py-border);
+      color: var(--py-text);
+      border-radius: 0.6rem;
+      padding: 0.6rem 0.85rem;
+    }
+
+    .py-input:focus {
+      background-color: var(--py-surface);
+      color: var(--py-text);
+      border-color: var(--py-accent);
+      box-shadow: 0 0 0 3px rgba(var(--py-accent-rgb), 0.2);
+    }
+
+    .py-table {
+      color: var(--py-text);
+      border-color: var(--py-border);
+    }
+
+    .py-table th,
+    .py-table td {
+      background-color: transparent !important;
+      color: var(--py-text) !important;
+      border-color: var(--py-border) !important;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="py-shell">
+    <!-- Pure-CSS Scroll-Driven Progress Bar -->
+    <div class="scroll-progress-bar" aria-hidden="true"></div>
+
+    <!-- ========================================================================
+         1. STICKY NAVBAR + PURE-CSS THEME SWITCHER
+         ======================================================================== -->
+    <header class="py-navbar sticky-top py-3">
+      <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <a href="#" class="text-decoration-none d-flex align-items-center gap-2">
+          <span class="d-inline-flex align-items-center justify-content-center rounded-3 p-2" style="background: linear-gradient(135deg, var(--py-accent), var(--py-accent-2));">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </span>
+          <span class="fw-bold fs-5" style="color: var(--py-text);">PY <span class="font-mono opacity-50">//</span> LABS</span>
+        </a>
+
+        <nav class="d-none d-lg-flex align-items-center gap-4">
+          <a href="#ch4-sequences" class="text-decoration-none text-py-muted fw-medium small">Ch.4 Strings, Lists &amp; Tuples</a>
+          <a href="#comparisons" class="text-decoration-none text-py-muted fw-medium small">3D Comparisons</a>
+          <a href="#ch5-libraries" class="text-decoration-none text-py-muted fw-medium small">Ch.5 Python Libraries</a>
+          <a href="#study-wizard" class="text-decoration-none text-py-muted fw-medium small">Interactive Workbook</a>
+        </nav>
+
+        <!-- Zero-JS Theme Switcher -->
+        <div class="btn-group theme-switcher" role="group" aria-label="Theme Switcher">
+          <input type="radio" class="btn-check" name="py-theme" id="theme-daylight" autocomplete="off">
+          <label class="btn rounded-start-pill" for="theme-daylight">Daylight</label>
+
+          <input type="radio" class="btn-check" name="py-theme" id="theme-midnight" autocomplete="off" checked>
+          <label class="btn" for="theme-midnight">Midnight</label>
+
+          <input type="radio" class="btn-check" name="py-theme" id="theme-emerald" autocomplete="off">
+          <label class="btn rounded-end-pill" for="theme-emerald">Emerald</label>
+        </div>
+      </div>
+    </header>
+
+    <!-- ========================================================================
+         2. HERO BANNER & LEARNING OUTCOMES OVERVIEW
+         ======================================================================== -->
+    <section class="hero-banner py-5 position-relative">
+      <div class="hero-glow"></div>
+      <div class="container py-3 py-lg-4 position-relative" style="z-index: 1;">
+        <div class="row justify-content-center text-center">
+          <div class="col-lg-9">
+            <span class="badge rounded-pill px-3 py-2 mb-3 font-mono border" style="background-color: var(--py-surface); color: var(--py-accent); border-color: var(--py-border) !important;">
+              CHAPTER 4 &amp; CHAPTER 5 &bull; 100% HTML + CSS + BOOTSTRAP 5.3 (ZERO JS)
+            </span>
+            <h1 class="display-5 fw-extrabold mb-3" style="letter-spacing: -0.025em;">
+              Python Sequences &amp; Scientific Libraries
+            </h1>
+            <p class="lead text-py-muted mx-auto mb-4" style="max-width: 700px;">
+              Complete study guide covering <strong>Strings, Lists, and Tuples</strong> (Chapter 4) and <strong>Standard &amp; Third-Party Libraries</strong> including <strong>Pandas, Matplotlib, and NumPy</strong> (Chapter 5).
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+              <a href="#ch4-sequences" class="btn btn-py-primary">Explore Chapter 4 &rarr;</a>
+              <a href="#ch5-libraries" class="btn border" style="background-color: var(--py-surface); color: var(--py-text); border-color: var(--py-border) !important; border-radius: 0.65rem; padding: 0.6rem 1.25rem;">Explore Chapter 5</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         3. CHAPTER 4: STRINGS, LISTS & TUPLES (BENTO GRID + @CONTAINER)
+         ======================================================================== -->
+    <section id="ch4-sequences" class="py-5">
+      <div class="container">
+        <div class="mb-4 scroll-reveal">
+          <span class="font-mono small fw-semibold text-uppercase" style="color: var(--py-accent);">// Chapter 4</span>
+          <h2 class="fw-bold mt-1">Python — Strings, Lists, and Tuples</h2>
+          <p class="text-py-muted mb-0">
+            Learning outcomes: create strings, create and manipulate lists, and create and access tuples.
+          </p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Card 1 (Wide): Strings, Indexing & Slicing -->
+          <div class="cq-slot bento-span-2 scroll-reveal">
+            <div class="py-card p-4 h-100">
+              <div class="bento-inner">
+                <div class="bento-meta">
+                  <span class="badge rounded-pill mb-2" style="background-color: rgba(var(--py-accent-rgb), 0.14); color: var(--py-accent);">Strings &amp; Slicing</span>
+                  <h4 class="fw-bold mb-2">Immutable Character Sequences</h4>
+                  <p class="text-py-muted small">
+                    Strings are sequences of characters enclosed in single (<code>'...'</code>) or double (<code>"..."</code>) quotes. They are <strong>immutable</strong> (cannot be altered once created).
+                  </p>
+                  <ul class="small text-py-muted ps-3 mb-0">
+                    <li>Positive indexing starts from <code>0</code> left-to-right.</li>
+                    <li>Negative indexing starts from <code>-1</code> (last character) right-to-left.</li>
+                    <li>Slicing <code>[start:end]</code> extracts substrings; out-of-range index raises <code>IndexError</code>.</li>
+                  </ul>
+                </div>
+                <div class="bento-code-pane d-flex flex-column gap-2">
+                  <pre class="py-code">str = "CODESYNC"
+print(str[0:8])    # full string
+print(str[0:4])    # first 4 chars
+print(str[4:8])    # last 4 chars
+print(str[-1])     # last char
+print(str[-2:])    # last 2 chars
+print(str[-6:-2])  # negative slice</pre>
+                  <div class="py-output"><strong>Output:</strong>
+CODESYNC
+CODE
+SYNC
+C
+NC
+DESY</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 (Narrow): Lists & Mutability -->
+          <div class="cq-slot scroll-reveal">
+            <div class="py-card p-4 h-100">
+              <div class="bento-inner">
+                <div class="bento-meta">
+                  <span class="badge rounded-pill mb-2" style="background-color: rgba(var(--py-accent-rgb), 0.14); color: var(--py-accent);">Lists</span>
+                  <h5 class="fw-bold mb-2">Ordered &amp; Mutable</h5>
+                  <p class="text-py-muted small">
+                    Defined inside square brackets <code>[]</code>. Can hold mixed types (<code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>) and nested lists.
+                  </p>
+                  <p class="text-py-muted small mb-0">
+                    <strong>Key ops:</strong> <code>len()</code>, <code>sort()</code>, <code>+</code> (concatenation), <code>sum()</code>, <code>append()</code>, <code>insert()</code>, <code>remove()</code>, <code>pop()</code>, <code>del</code>.
+                  </p>
+                </div>
+                <div class="bento-code-pane d-flex flex-column gap-2">
+                  <pre class="py-code">fruits = ["apple", "banana", "cherry"]
+fruits[1] = "orange"
+fruits.append("kiwi")
+popped = fruits.pop()
+print(fruits, popped)</pre>
+                  <div class="py-output">['apple', 'orange', 'cherry'] kiwi</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 (Narrow): Tuples & Immutability -->
+          <div class="cq-slot scroll-reveal">
+            <div class="py-card p-4 h-100">
+              <div class="bento-inner">
+                <div class="bento-meta">
+                  <span class="badge rounded-pill mb-2" style="background-color: rgba(var(--py-accent-rgb), 0.14); color: var(--py-accent);">Tuples</span>
+                  <h5 class="fw-bold mb-2">Ordered &amp; Immutable</h5>
+                  <p class="text-py-muted small">
+                    Defined by enclosing comma-separated elements in parentheses <code>()</code>. Elements cannot be changed, added, or removed after creation.
+                  </p>
+                  <p class="text-py-muted small mb-0">
+                    Supports zero-based indexing, negative indexing, slicing, and nested tuples.
+                  </p>
+                </div>
+                <div class="bento-code-pane d-flex flex-column gap-2">
+                  <pre class="py-code">tuple2 = ("apple", "banana", "cherry")
+print(tuple2[0])
+print(tuple2[-1])
+print(tuple2[1:3])</pre>
+                  <div class="py-output">apple
+cherry
+('banana', 'cherry')</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 (Wide): Average Marks List Program & Restaurant Menu Tuple -->
+          <div class="cq-slot bento-span-2 scroll-reveal">
+            <div class="py-card p-4 h-100">
+              <div class="bento-inner">
+                <div class="bento-meta">
+                  <span class="badge rounded-pill mb-2" style="background-color: rgba(var(--py-accent-rgb), 0.14); color: var(--py-accent);">Textbook Programs</span>
+                  <h4 class="fw-bold mb-2">Average Marks (Lists) &amp; Menu (Tuples)</h4>
+                  <p class="text-py-muted small">
+                    <strong>Code Tip:</strong> <code>del</code> is a statement that deletes an object or reference, while <code>pop()</code> is a method that removes and returns a specific item from a list or dictionary.
+                  </p>
+                  <p class="text-py-muted small mb-0">
+                    Watch out for the common hurdle of mixing up square brackets <code>[]</code> for lists and parentheses <code>()</code> for tuples.
+                  </p>
+                </div>
+                <div class="bento-code-pane d-flex flex-column gap-2">
+                  <pre class="py-code">subjects = ["Math", "Science", "History", "English"]
+marks = [85, 90, 75, 80]
+total_marks = sum(marks)
+average_marks = total_marks / len(marks)
+print("Total marks:", total_marks)
+print("Average marks:", average_marks)</pre>
+                  <div class="py-output">Total marks: 330
+Average marks: 82.5</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         4. 3D PERSPECTIVE FLIP CARDS: LISTS VS TUPLES & LIBRARIES
+         ======================================================================== -->
+    <section id="comparisons" class="py-5">
+      <div class="container">
+        <div class="text-center mb-4 scroll-reveal">
+          <span class="font-mono small fw-semibold text-uppercase" style="color: var(--py-accent);">// 3D Flip Study Cards</span>
+          <h2 class="fw-bold mt-1">Key Comparisons &amp; Quick Recall</h2>
+          <p class="text-py-muted small">Hover or focus any card to flip in 3D space and review the comparison details.</p>
+        </div>
+
+        <div class="row g-4">
+          <!-- Flip Card 1: Lists vs Tuples -->
+          <div class="col-md-4 scroll-reveal">
+            <div class="flip-stage" tabindex="0">
+              <div class="flip-inner">
+                <div class="flip-face flip-front">
+                  <div>
+                    <span class="badge border mb-2" style="color: var(--py-accent); border-color: var(--py-border) !important;">CH.4 COMPARISON</span>
+                    <h4 class="fw-bold">Lists vs. Tuples</h4>
+                    <p class="text-py-muted small mt-2">
+                      Both store ordered collections and support indexing &amp; iteration, but differ in mutability, syntax, speed, and memory.
+                    </p>
+                  </div>
+                  <div class="font-mono small text-py-muted">Hover or focus to flip &circlearrowright;</div>
+                </div>
+                <div class="flip-face flip-back">
+                  <div>
+                    <h5 class="fw-bold mb-3" style="color: var(--py-accent);">List vs. Tuple Table</h5>
+                    <table class="table table-sm py-table small mb-0">
+                      <thead>
+                        <tr><th>Feature</th><th>List</th><th>Tuple</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>Mutability</td><td>Mutable</td><td>Immutable</td></tr>
+                        <tr><td>Syntax</td><td><code>[ ]</code></td><td><code>( )</code></td></tr>
+                        <tr><td>Speed</td><td>Slower</td><td>Faster</td></tr>
+                        <tr><td>Use Case</td><td>Dynamic</td><td>Fixed</td></tr>
+                        <tr><td>Memory</td><td>More</td><td>Less</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <span class="font-mono small text-py-muted">Tuples can also act as dict keys</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flip Card 2: Standard vs Third-Party Libraries -->
+          <div class="col-md-4 scroll-reveal">
+            <div class="flip-stage" tabindex="0">
+              <div class="flip-inner">
+                <div class="flip-face flip-front">
+                  <div>
+                    <span class="badge border mb-2" style="color: var(--py-accent); border-color: var(--py-border) !important;">CH.5 LIBRARIES</span>
+                    <h4 class="fw-bold">Standard vs. Third-Party</h4>
+                    <p class="text-py-muted small mt-2">
+                      A library is a collection of pre-written code (modules &amp; functions) imported using the <code>import</code> keyword.
+                    </p>
+                  </div>
+                  <div class="font-mono small text-py-muted">Hover or focus to flip &circlearrowright;</div>
+                </div>
+                <div class="flip-face flip-back">
+                  <div>
+                    <h5 class="fw-bold mb-2" style="color: var(--py-accent);">Library Categories</h5>
+                    <p class="small mb-2">
+                      <strong>1. Standard Library:</strong> Built into Python, no extra install needed (e.g., <code>math</code> with <code>math.sqrt()</code>, <code>math.pow()</code>).
+                    </p>
+                    <p class="small mb-0">
+                      <strong>2. Third-Party Library:</strong> Community/org packages installed via <code>pip</code> (e.g., <code>Pandas</code>, <code>NumPy</code>, <code>Matplotlib</code>).
+                    </p>
+                  </div>
+                  <span class="font-mono small text-py-muted">Use <code>import</code> to load modules</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flip Card 3: DataFrame Inspection Methods -->
+          <div class="col-md-4 scroll-reveal">
+            <div class="flip-stage" tabindex="0">
+              <div class="flip-inner">
+                <div class="flip-face flip-front">
+                  <div>
+                    <span class="badge border mb-2" style="color: var(--py-accent); border-color: var(--py-border) !important;">PANDAS ANALYSIS</span>
+                    <h4 class="fw-bold">DataFrame Inspection</h4>
+                    <p class="text-py-muted small mt-2">
+                      Create a 2D labeled table from a dictionary using <code>pd.DataFrame(detail)</code>, then inspect rows, dimensions, and columns.
+                    </p>
+                  </div>
+                  <div class="font-mono small text-py-muted">Hover or focus to flip &circlearrowright;</div>
+                </div>
+                <div class="flip-face flip-back">
+                  <div>
+                    <h5 class="fw-bold mb-2" style="color: var(--py-accent);">Key Functions &amp; Attributes</h5>
+                    <ul class="list-unstyled small d-grid gap-2 mb-0">
+                      <li><code>df.head()</code> &mdash; First 5 rows (default)</li>
+                      <li><code>df.tail()</code> &mdash; Last 5 rows (default)</li>
+                      <li><code>df.shape</code> &mdash; Tuple of <code>(rows, columns)</code></li>
+                      <li><code>df.columns</code> &mdash; Returns column labels</li>
+                    </ul>
+                  </div>
+                  <span class="font-mono small text-py-muted">Alias convention: <code>import pandas as pd</code></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         5. CHAPTER 5: PYTHON LIBRARIES (PANDAS, MATPLOTLIB & NUMPY)
+         ======================================================================== -->
+    <section id="ch5-libraries" class="py-5">
+      <div class="container">
+        <div class="mb-4 scroll-reveal">
+          <span class="font-mono small fw-semibold text-uppercase" style="color: var(--py-accent);">// Chapter 5</span>
+          <h2 class="fw-bold mt-1">Python — Libraries (Pandas, Matplotlib &amp; NumPy)</h2>
+          <p class="text-py-muted mb-0">
+            Learning outcomes: understand libraries, visualize data with Matplotlib, manipulate data with Pandas, and compute numerically with NumPy.
+          </p>
+        </div>
+
+        <div class="row g-4">
+          <!-- Pandas Card -->
+          <div class="col-lg-4 scroll-reveal">
+            <div class="py-card p-4 h-100 d-flex flex-column justify-content-between">
+              <div>
+                <span class="badge rounded-pill mb-2" style="background-color: rgba(var(--py-accent-rgb), 0.14); color: var(--py-accent);">Data Manipulation</span>
+                <h4 class="fw-bold">Pandas Library</h4>
+                <p class="text-py-muted small">
+                  Used to organize and analyze tabular data via <code>DataFrame</code>. Dictionary keys become column names and list values become column entries.
+                </p>
+                <pre class="py-code mb-3">import pandas as pd
+
+detail = {
+    'Name': ['Ramesh', 'Karan', 'Ruby'],
+    'Age': ['17', '23', '13']
+}
+df = pd.DataFrame(detail)
+print(df)
+print(df.shape)
+print(df.columns)</pre>
+              </div>
+              <div class="py-output">     Name Age
+0  Ramesh  17
+1   Karan  23
+2    Ruby  13
+Shape: (3, 2) | Cols: ['Name', 'Age']</div>
+            </div>
+          </div>
+
+          <!-- Matplotlib Card -->
+          <div class="col-lg-4 scroll-reveal">
+            <div class="py-card p-4 h-100 d-flex flex-column justify-content-between">
+              <div>
+                <span class="badge rounded-pill mb-2" style="background-color: rgba(var(--py-accent-rgb), 0.14); color: var(--py-accent);">Data Visualization</span>
+                <h4 class="fw-bold">Matplotlib Library</h4>
+                <p class="text-py-muted small">
+                  Enables plotting line graphs, bar charts, scatter plots, and pie charts effortlessly using <code>matplotlib.pyplot</code> (typically imported as <code>plt</code>).
+                </p>
+                <pre class="py-code mb-3">import matplotlib.pyplot as plt
+
+months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
+grades = [85, 90, 88, 92, 95, 89]
+
+plt.plot(months, grades)
+plt.title("Monthly Grades")
+plt.show()</pre>
+              </div>
+              <div class="py-output"><strong>Chart Types:</strong>
+Line plot &bull; Bar chart &bull; Scatter &bull; Pie chart</div>
+            </div>
+          </div>
+
+          <!-- NumPy Card -->
+          <div class="col-lg-4 scroll-reveal">
+            <div class="py-card p-4 h-100 d-flex flex-column justify-content-between">
+              <div>
+                <span class="badge rounded-pill mb-2" style="background-color: rgba(var(--py-accent-rgb), 0.14); color: var(--py-accent);">Numerical Python</span>
+                <h4 class="fw-bold">NumPy Library</h4>
+                <p class="text-py-muted small">
+                  Open-source library for fast numerical computation, multi-dimensional arrays, and matrices in data science and machine learning.
+                </p>
+                <pre class="py-code mb-3">import numpy as np
+
+num = [1, 2, 3, 4, 5]
+num_array = np.array(num)
+s = np.sum(num_array)
+print(s)</pre>
+              </div>
+              <div class="py-output"><strong>Output:</strong>
+15</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         6. PURE-CSS MULTI-STEP STUDY WORKBOOK & PRACTICE PROMPT BUILDER
+         ======================================================================== -->
+    <section id="study-wizard" class="py-5 mb-5">
+      <div class="container" style="max-width: 760px;">
+        <div class="text-center mb-4 scroll-reveal">
+          <span class="font-mono small fw-semibold text-uppercase" style="color: var(--py-accent);">// Zero-JS Interactive Workbook</span>
+          <h2 class="fw-bold mt-1">Chapter 4 &amp; 5 Practice Lab</h2>
+          <p class="text-py-muted small">
+            Step through textbook review questions and build your study check-in using CSS <code>:checked ~</code> and <code>:has(:invalid)</code>.
+          </p>
+        </div>
+
+        <!-- Hidden Step Controllers -->
+        <input type="radio" name="py-lab-step" id="lab-step-1" class="lab-radio" checked>
+        <input type="radio" name="py-lab-step" id="lab-step-2" class="lab-radio">
+        <input type="radio" name="py-lab-step" id="lab-step-3" class="lab-radio">
+
+        <div class="py-card lab-shell overflow-hidden scroll-reveal">
+          <!-- Progress Bar -->
+          <div class="progress rounded-0" style="height: 5px; background-color: var(--py-surface-alt);">
+            <div class="progress-bar lab-progress" style="background: linear-gradient(90deg, var(--py-accent), var(--py-accent-2)); transition: width 0.35s ease;"></div>
+          </div>
+
+          <!-- Step Pills -->
+          <div class="px-4 pt-4 pb-3 d-flex flex-wrap justify-content-between gap-2 border-bottom" style="border-color: var(--py-border) !important;">
+            <span class="badge rounded-pill border pill-1 px-3 py-2 font-mono">Step 1: Ch.4 Check</span>
+            <span class="badge rounded-pill border pill-2 px-3 py-2 font-mono">Step 2: Ch.5 Check</span>
+            <span class="badge rounded-pill border pill-3 px-3 py-2 font-mono">Step 3: Study Log</span>
+          </div>
+
+          <div class="p-4 p-md-5">
+            <!-- STEP 1: CHAPTER 4 PRACTICE -->
+            <div class="lab-pane pane-ch4">
+              <h4 class="fw-bold mb-2">Chapter 4: Lists, Tuples &amp; Strings</h4>
+              <p class="text-py-muted small mb-3">
+                Review these textbook questions before advancing:
+              </p>
+              <ul class="small d-grid gap-2 mb-4">
+                <li><strong>MCQ 1:</strong> For <code>fruits = ["apple", "banana", "cherry"]</code> and <code>fruits[1] = "blueberry"</code>, <code>print(fruits)</code> outputs <code>['apple', 'blueberry', 'cherry']</code>.</li>
+                <li><strong>MCQ 2:</strong> Nested tuple syntax is <code>((1, 2), (3, 4), (5, 6))</code>.</li>
+                <li><strong>Party Budget Task:</strong> Cake (₹25) + Drinks (₹15) + Decorations (₹20) + Party Favours (₹10) = <strong>₹70</strong> total out of ₹100 budget (<strong>₹30</strong> remaining).</li>
+              </ul>
+
+              <div class="mb-4">
+                <label for="ch4-note" class="form-label small fw-semibold">Write a one-line difference between List and Tuple (min 6 chars) *</label>
+                <input type="text" id="ch4-note" class="form-control py-input" minlength="6" placeholder="Lists use [] and are mutable; tuples use () and are immutable." required>
+              </div>
+
+              <div class="d-flex justify-content-end">
+                <label for="lab-step-2" class="btn btn-py-primary btn-lab-next" role="button" tabindex="0">
+                  Next: Chapter 5 Libraries &rarr;
+                </label>
+              </div>
+            </div>
+
+            <!-- STEP 2: CHAPTER 5 PRACTICE -->
+            <div class="lab-pane pane-ch5">
+              <h4 class="fw-bold mb-2">Chapter 5: Libraries &amp; Data Analysis</h4>
+              <p class="text-py-muted small mb-3">
+                Key answers from Assess Your Proficiency:
+              </p>
+              <ul class="small d-grid gap-2 mb-4">
+                <li><strong>Math Square Root:</strong> <code>math.sqrt()</code> returns the square root of a number.</li>
+                <li><strong>Import Keyword:</strong> Use <code>import</code> to include standard or third-party libraries.</li>
+                <li><strong>DataFrame First 5 Rows:</strong> <code>head()</code> prints the first 5 rows of a DataFrame by default.</li>
+              </ul>
+
+              <div class="mb-4">
+                <label for="ch5-func" class="form-label small fw-semibold">Name the NumPy or Pandas function you practiced (min 3 chars) *</label>
+                <input type="text" id="ch5-func" class="form-control py-input font-mono" minlength="3" placeholder="np.array / np.sum / df.head" required>
+              </div>
+
+              <div class="d-flex justify-content-between">
+                <label for="lab-step-1" class="btn border" style="color: var(--py-text); border-color: var(--py-border) !important; border-radius: 0.65rem;" role="button" tabindex="0">
+                  &larr; Back
+                </label>
+                <label for="lab-step-3" class="btn btn-py-primary btn-lab-next" role="button" tabindex="0">
+                  Complete Lab Summary &rarr;
+                </label>
+              </div>
+            </div>
+
+            <!-- STEP 3: COMPLETION SUMMARY -->
+            <div class="lab-pane pane-practice text-center py-2">
+              <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 60px; height: 60px; background-color: rgba(16, 185, 129, 0.15); color: #10b981;">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <h4 class="fw-bold mb-2">Chapter 4 &amp; 5 Review Complete!</h4>
+              <p class="text-py-muted small mx-auto mb-4" style="max-width: 480px;">
+                All required inputs passed CSS <code>:has(:invalid)</code> checks using zero JavaScript. You can now test the textbook exercises in Python IDLE or a code editor.
+              </p>
+              <div class="d-flex justify-content-center gap-3">
+                <label for="lab-step-2" class="btn border" style="color: var(--py-text); border-color: var(--py-border) !important; border-radius: 0.65rem;" role="button" tabindex="0">
+                  &larr; Previous Step
+                </label>
+                <label for="lab-step-1" class="btn btn-py-primary" role="button" tabindex="0">
+                  Restart Workbook
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         FOOTER
+         ======================================================================== -->
+    <footer class="py-4 border-top" style="border-color: var(--py-border) !important; background-color: var(--py-surface);">
+      <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2 small text-py-muted">
+        <span class="font-mono">PY // LABS &copy; 2026 &mdash; Chapter 4 &amp; 5 Study Companion</span>
+        <span>Built with HTML5, CSS3 &amp; Bootstrap 5.3 (Zero JS)</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
